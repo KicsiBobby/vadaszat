@@ -21,6 +21,9 @@ public class HelloController {
 
     private ImageView[][] it = new ImageView[16][32];
     private int[][] t = new int[16][32];
+    private int es=-1;
+    private int eo=-1;
+
 
     private int roka = 0;
     private int rokaMax = 0;
@@ -29,14 +32,40 @@ public class HelloController {
         for (int i=0; i<5; i++) icon[i] = new Image(getClass().getResourceAsStream(iconNev[i]+".png"));
         for (int s=0; s<16; s++){
             for (int o=0; o<32; o++){
+                int ss=s, oo=o;
                 it[s][o]=new ImageView(icon[DARK]);
                 it[s][o].setLayoutX(10+o*48);
                 it[s][o].setLayoutY(10+s*48);
+                it[s][o].setOnMouseEntered(e -> vilagit(ss,oo));
                 pnJatek.getChildren().add(it[s][o]);
             }
         }
         generalErdo();
     }
+
+    private void vilagit(int s, int o){
+        if (s!=es || o!=eo) {
+            for (int dS=-2; dS<=2; dS++){
+                for (int dO=-2; dO<=2; dO++){
+                    int ss=es+dS, oo=eo+dO;
+                    if (ss>=0 && ss<=15 && oo>=0 && oo<=31){
+                        it[ss][oo].setImage(icon[DARK]);
+                    }
+                }
+            }
+            for (int dS = -2; dS <= 2; dS++) {
+                for (int dO = -2; dO <= 2; dO++) {
+                    int ss = s + dS, oo = o + dO;
+                    if (ss >= 0 && ss <= 15 && oo >= 0 && oo <= 31 && !(Math.abs(dS) == 2 && Math.abs(dO) == 2)) {
+                        it[ss][oo].setImage(icon[t[ss][oo]]);
+                    }
+                }
+            }
+            es=s;
+            eo=o;
+        }
+    }
+
 
     private void generalErdo(){
         roka=0;
