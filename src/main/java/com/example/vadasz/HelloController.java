@@ -1,5 +1,6 @@
 package com.example.vadasz;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,7 +17,9 @@ public class HelloController {
     private Image[] icon = new Image[5];
 
     private final int DARK=0;
+    private final int DEAD=1;
     private final int ROKA=2;
+    private final int HOME=3;
     private final int TREE=4;
 
     private ImageView[][] it = new ImageView[16][32];
@@ -24,9 +27,16 @@ public class HelloController {
     private int es=-1;
     private int eo=-1;
 
+    private int loves=0;
+    private int talalt=0;
+
+
 
     private int roka = 0;
     private int rokaMax = 0;
+    private AnimationTimer timer=null;
+    private long tt=0;
+    private long most=0;
 
     public void initialize(){
         for (int i=0; i<5; i++) icon[i] = new Image(getClass().getResourceAsStream(iconNev[i]+".png"));
@@ -41,6 +51,13 @@ public class HelloController {
             }
         }
         generalErdo();
+        timer = new AnimationTimer(){
+            @Override
+            public void handle(long now){
+                if (now > tt) elbujik();
+            }
+        };
+        timer.start();
     }
 
     private void vilagit(int s, int o){
@@ -56,13 +73,26 @@ public class HelloController {
             for (int dS = -2; dS <= 2; dS++) {
                 for (int dO = -2; dO <= 2; dO++) {
                     int ss = s + dS, oo = o + dO;
-                    if (ss >= 0 && ss <= 15 && oo >= 0 && oo <= 31 && !(Math.abs(dS) == 2 && Math.abs(dO) == 2)) {
+                    if (ss >= 0 && ss <= 15 && oo >= 0 && oo <= 31 && !(Math.abs(dS) == 2 && Math.abs(dO) == 2) && t[ss][oo]==ROKA) {
                         it[ss][oo].setImage(icon[t[ss][oo]]);
                     }
                 }
             }
             es=s;
             eo=o;
+            tt = most+500_000_000;
+        }
+    }
+
+    private void elbujik(){
+        for (int dS = -2; dS <= 2; dS++) {
+            for (int dO = -2; dO <= 2; dO++) {
+                int ss = es + dS, oo = eo + dO;
+                if (ss >= 0 && ss <= 15 && oo >= 0 && oo <= 31 && !(Math.abs(dS) == 2 && Math.abs(dO) == 2)) {
+                    it[ss][oo].setImage(icon[HOME]); t[ss][oo]=HOME; roka--;
+                }
+            }
+            lbRoka.setText(roka + " / "+rokaMax+" róka");
         }
     }
 
@@ -76,6 +106,16 @@ public class HelloController {
             rokaMax=roka;
             lbRoka.setText(roka + " / "+rokaMax+" róka");
         }
+    }
+
+    private void loves(int s, int o){
+        loves++;
+        if (t[s][o]==ROKA){
+            it[s][o].setImage(icon[DEAD]); t[s][o]=DEAD; roka--;
+            lbRoka.setText(roka + " / " +rokaMax+ " róka");
+            talalt++;
+        }
+        lbRoka.setText(roka + " / "+rokaMax+" róka");
     }
 
 }
