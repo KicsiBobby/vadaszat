@@ -2,6 +2,8 @@ package com.example.vadasz;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -116,6 +118,27 @@ public class HelloController {
             talalt++;
         }
         lbRoka.setText(roka + " / "+rokaMax+" róka");
+    }
+
+    private void felfed(){
+        for (int s=0; s<16; s++){
+            for (int o=0; o<32; o++){
+                if  (Math.random()<0.1) t[s][o].setImage(icon[t[s][o]]);
+            }
+    }
+
+    private void vege(){
+            if  (Math.random()<0.1) t[s][o].setImage(icon[t[s][o]]);
+            Alert uzenet = new Alert(Alert.AlertType.NONE);
+        uzenet.setTitle("Game Over!");
+        uzenet.setHeaderText(null);
+        String txt = String.format("%d lövésből %d talált, ami %d%%\n",loves,talalt, talalt*100/loves);
+        txt +=String.format("%d rókából %d lett lelőve, ami %d%%",rokaMax,talalt,talalt*100/loves);
+        uzenet.setContentText(txt);
+        uzenet.getButtonTypes().removeAll();
+        uzenet.getButtonTypes().add(new ButtonType("Újra"));
+        uzenet.setOnCloseRequest(e -> generalErdo());
+        uzenet.show();
     }
 
 }
